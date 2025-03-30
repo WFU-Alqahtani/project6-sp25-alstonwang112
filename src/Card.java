@@ -14,18 +14,25 @@ public class Card {
     private suites suit;
     private ranks rank;
 
-    Card(){
+    Card() {
         suit = suites.NULL;
         rank = ranks.NULL;
     }
 
-    Card(suites s, ranks r){
+    Card(suites s, ranks r) {
         suit = s;
         rank = r;
     }
 
-    public void print_card(){
+    public void print_card() {
         System.out.print(suit + ": " + rank);
     }
 
+    public suites getSuit() {
+        return this.suit;
+    }
+
+    public ranks getRank() {
+        return this.rank;
+    }
 }
