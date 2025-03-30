@@ -27,12 +27,13 @@ public class LinkedList {
     // remove a card from a specific index
     public Card remove_from_index(int index) {
         int count = 0;
+
         Node curr = head;
 
         while (curr != null) {
             if (index == 0) {
                 return remove_from_head();
-            } else if (index == count - 1) {
+            } else if (index == count) {
                 if (curr.next == null) {
                     tail = curr.prev;
                     tail.next = null;
@@ -43,6 +44,8 @@ public class LinkedList {
                 }
                 return curr.data;
             }
+
+            count++;
             curr = curr.next;
         }
 
@@ -52,6 +55,7 @@ public class LinkedList {
     // insert a card at a specific index
     public void insert_at_index(Card x, int index) {
         int count = 0;
+
         Node curr = head;
         Node n = new Node(x);
 
@@ -61,7 +65,7 @@ public class LinkedList {
                 head.prev = n;
                 head = n;
                 break;
-            } else if (index == count - 1) {
+            } else if (index == count) {
                 if (curr.next == null) {
                     tail.next = n;
                     n.prev = tail;
@@ -74,6 +78,7 @@ public class LinkedList {
                 }
                 break;
             }
+            count++;
             curr = curr.next;
         }
     }
@@ -83,24 +88,45 @@ public class LinkedList {
         Card card1 = remove_from_index(index1);
         Card card2 = remove_from_index(index2 - 1);
 
-        insert_at_index(card2, index1);
-        insert_at_index(card1, index2);
+        if (card1 != null && card2 != null) {
+            insert_at_index(card2, index1);
+            insert_at_index(card1, index2);
+        }
     }
 
     // add card at the end of the list
     public void add_at_tail(Card data) {
         Node n = new Node(data);
-        tail.next = n;
-        n.prev = tail;
-        tail = n;
+
+        if (size == 0) {
+            head = tail = n;
+        } else {
+            tail.next = n;
+            n.prev = tail;
+            tail = n;
+        }
+
+        size++;
     }
 
     // remove a card from the beginning of the list
     public Card remove_from_head() {
-        head = head.next;
-        head.prev.next = null;
-        head.next = null;
-        return head.data;
+        if (size == 0) {
+            return null;
+        } else {
+            if (head.next == null) {
+                Node n = head;
+                head = null;
+                return n.data;
+            } else {
+                head = head.next;
+                head.prev = null;
+            }
+
+            size--;
+
+            return head.data;
+        }
     }
 
     // check to make sure the linked list is implemented correctly by iterating forwards and backwards
