@@ -30,10 +30,13 @@ public class lab6 {
 
         int victories = 0;
         int losses = 0;
+        int attempts = 0;
 
         for (int i = 0; i < 5; i++) {
             computerCard = computer.remove_from_head();
+            deck.add_at_tail(computerCard);
             playerCard = player1.remove_from_head();
+            deck.add_at_tail(playerCard);
 
             System.out.print("Your opponent's card is: ");
             computerCard.print_card();
@@ -48,41 +51,47 @@ public class lab6 {
 
             if (input == 'h' || input == 'H') {
                 if (playerCard.getRank().compareTo(computerCard.getRank()) > 0) {
+                    System.out.println("Correct!");
                     victories++;
                 } else if (playerCard.getRank().compareTo(computerCard.getRank()) < 0) {
+                    System.out.println("Incorrect.");
                     losses++;
                 } else {
                     if (playerCard.getSuit().compareTo(computerCard.getSuit()) > 0) {
+                        System.out.println("Correct!");
                         victories++;
                     } else {
                         losses++;
+                        System.out.println("Incorrect.");
                     }
                 }
             } else {
                 if (playerCard.getRank().compareTo(computerCard.getRank()) < 0) {
+                    System.out.println("Correct!");
                     victories++;
                 } else if (playerCard.getRank().compareTo(computerCard.getRank()) > 0) {
+                    System.out.println("Incorrect.");
                     losses++;
                 } else {
                     if (playerCard.getSuit().compareTo(computerCard.getSuit()) > 0) {
+                        System.out.println("Correct!");
                         victories++;
                     } else {
+                        System.out.println("Incorrect.");
                         losses++;
                     }
                 }
             }
 
-            deck.add_at_tail(playerCard);
-            deck.add_at_tail(computerCard);
-            deck.sanity_check();
+            attempts++;
 
-            if (victories == 3) {
+            if (losses == 3) {
                 break;
             }
         }
 
-        if (victories == 3) {
-            rage_quit(player1, computer, deck);
+        if (losses == 3) {
+            rage_quit(player1, computer, deck, attempts);
         } else {
             System.out.println("Game Statistics");
             System.out.println("Wins: " + victories);
@@ -90,13 +99,23 @@ public class lab6 {
         }
     }
 
-    public static void rage_quit(LinkedList player1, LinkedList computer, LinkedList deck) {
+    public static void rage_quit(LinkedList player1, LinkedList computer, LinkedList deck, int attempts) {
+        Card playerCard;
+        Card computerCard;
+
+        for (int i = 0; i < 5 - attempts; i++) {
+            playerCard = player1.remove_from_head();
+            computerCard = computer.remove_from_head();
+
+            deck.add_at_tail(playerCard);
+            deck.add_at_tail(computerCard);
+        }
+
         deck.shuffle(512);
         deck.print();
         deck.sanity_check();
 
-        int num_cards_dealt = 5;
-        for (int i = 0; i < num_cards_dealt; i++) {
+        for (int i = 0; i < 5; i++) {
             player1.add_at_tail(deck.remove_from_head());
             computer.add_at_tail(deck.remove_from_head());
         }
@@ -113,8 +132,6 @@ public class lab6 {
 
         // shuffle the deck (random order)
         deck.shuffle(512);
-
-        /*
         deck.print();
         deck.sanity_check(); // because we can all use one
 
@@ -128,7 +145,6 @@ public class lab6 {
         int num_cards_dealt = 5;
         for (int i = 0; i < num_cards_dealt; i++) {
             // player removes a card from the deck and adds to their hand
-
             player1.add_at_tail(deck.remove_from_head());
             deck.sanity_check();
             computer.add_at_tail(deck.remove_from_head());
@@ -137,6 +153,5 @@ public class lab6 {
 
         // let the games begin!
         play_blind_mans_bluff(player1, computer, deck);
-         */
     }
 }

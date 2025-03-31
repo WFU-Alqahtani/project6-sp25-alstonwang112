@@ -21,8 +21,6 @@ public class LinkedList {
             int r1 = rand.nextInt(52);
             int r2 = rand.nextInt(52);
 
-            System.out.println("Swapping cards at " + r1 + " and " + r2);
-
             swap(r1, r2); // swap nodes at these indices
         }
     }
@@ -33,13 +31,10 @@ public class LinkedList {
         int count = 0;
 
         while (curr != null) {
-
-            System.out.println("Node: " + curr + ". Count: " + count + ". Index: " + index);
-
             if (count == index) {
                 if (index == 0) {
                     return remove_from_head();
-                } else if (curr == tail) {
+                } else if (curr.next == null) {
                     tail = curr.prev;
                     tail.next = null;
                     curr.prev = null;
@@ -71,19 +66,25 @@ public class LinkedList {
                     head.prev = n;
                     head = n;
                     size++;
-                } else if (curr == tail) {
-                    add_at_tail(x);
+                    return;
                 } else {
                     n.next = curr;
                     n.prev = curr.prev;
                     curr.prev.next = n;
                     curr.prev = n;
                     size++;
+                    return;
                 }
-                break;
             } else {
                 count++;
                 curr = curr.next;
+                if (curr.next == null) {
+                    tail.next = n;
+                    n.prev = tail;
+                    tail = n;
+                    size++;
+                    return;
+                }
             }
         }
     }
@@ -98,23 +99,17 @@ public class LinkedList {
                 card2 = remove_from_index(index2);
                 card1 = remove_from_index(index1);
 
-                System.out.println("Card1 is " + card1);
-                System.out.println("Card2 is " + card2);
-
                 if (card1 != null && card2 != null) {
-                    insert_at_index(card1, index2);
                     insert_at_index(card2, index1);
+                    insert_at_index(card1, index2);
                 }
             } else {
                 card1 = remove_from_index(index1);
                 card2 = remove_from_index(index2);
 
-                System.out.println("Card1 is " + card1);
-                System.out.println("Card2 is " + card2);
-
                 if (card1 != null && card2 != null) {
-                    insert_at_index(card2, index1);
                     insert_at_index(card1, index2);
+                    insert_at_index(card2, index1);
                 }
             }
         }
