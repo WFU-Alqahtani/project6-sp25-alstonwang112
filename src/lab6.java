@@ -16,7 +16,6 @@ public class lab6 {
                 }
             }
         }
-
         return deck;
     }
 
@@ -99,9 +98,7 @@ public class lab6 {
         int num_cards_dealt = 5;
         for (int i = 0; i < num_cards_dealt; i++) {
             player1.add_at_tail(deck.remove_from_head());
-            deck.sanity_check();
             computer.add_at_tail(deck.remove_from_head());
-            deck.sanity_check();
         }
 
         play_blind_mans_bluff(player1, computer, deck);
@@ -116,8 +113,12 @@ public class lab6 {
 
         // shuffle the deck (random order)
         deck.shuffle(512);
+
+        /*
         deck.print();
         deck.sanity_check(); // because we can all use one
+
+        System.out.println();
 
         // cards for player 1 (hand)
         LinkedList player1 = new LinkedList();
@@ -127,6 +128,7 @@ public class lab6 {
         int num_cards_dealt = 5;
         for (int i = 0; i < num_cards_dealt; i++) {
             // player removes a card from the deck and adds to their hand
+
             player1.add_at_tail(deck.remove_from_head());
             deck.sanity_check();
             computer.add_at_tail(deck.remove_from_head());
@@ -135,5 +137,6 @@ public class lab6 {
 
         // let the games begin!
         play_blind_mans_bluff(player1, computer, deck);
+         */
     }
 }

@@ -16,25 +16,30 @@ public class LinkedList {
     public void shuffle(int shuffle_count) {
         Random rand = new Random();
 
-        for(int i = 0; i < shuffle_count; i++) {
+        for (int i = 0; i < shuffle_count; i++) {
             // pick two random integers
             int r1 = rand.nextInt(52);
             int r2 = rand.nextInt(52);
+
+            System.out.println("Swapping cards at " + r1 + " and " + r2);
+
             swap(r1, r2); // swap nodes at these indices
         }
     }
 
     // remove a card from a specific index
     public Card remove_from_index(int index) {
+        Node curr = head;
         int count = 0;
 
-        Node curr = head;
-
         while (curr != null) {
-            if (index == 0) {
-                return remove_from_head();
-            } else if (index == count) {
-                if (curr.next == null) {
+
+            System.out.println("Node: " + curr + ". Count: " + count + ". Index: " + index);
+
+            if (count == index) {
+                if (index == 0) {
+                    return remove_from_head();
+                } else if (curr == tail) {
                     tail = curr.prev;
                     tail.next = null;
                     curr.prev = null;
@@ -42,11 +47,12 @@ public class LinkedList {
                     curr.prev.next = curr.next;
                     curr.next.prev = curr.prev;
                 }
+                size--;
                 return curr.data;
+            } else {
+                count++;
+                curr = curr.next;
             }
-
-            count++;
-            curr = curr.next;
         }
 
         return null;
@@ -55,42 +61,62 @@ public class LinkedList {
     // insert a card at a specific index
     public void insert_at_index(Card x, int index) {
         int count = 0;
-
         Node curr = head;
         Node n = new Node(x);
 
         while (curr != null) {
-            if (index == 0) {
-                n.next = head;
-                head.prev = n;
-                head = n;
-                break;
-            } else if (index == count) {
-                if (curr.next == null) {
-                    tail.next = n;
-                    n.prev = tail;
-                    tail = n;
+            if (count == index) {
+                if (index == 0) {
+                    n.next = head;
+                    head.prev = n;
+                    head = n;
+                    size++;
+                } else if (curr == tail) {
+                    add_at_tail(x);
                 } else {
-                    curr.next.prev = n;
-                    n.next = curr.next;
-                    curr.next = n;
-                    n.prev = curr;
+                    n.next = curr;
+                    n.prev = curr.prev;
+                    curr.prev.next = n;
+                    curr.prev = n;
+                    size++;
                 }
                 break;
+            } else {
+                count++;
+                curr = curr.next;
             }
-            count++;
-            curr = curr.next;
         }
     }
 
     // swap two cards in the deck at the specific indices
     public void swap(int index1, int index2) {
-        Card card1 = remove_from_index(index1);
-        Card card2 = remove_from_index(index2 - 1);
+        if (index1 != index2) {
+            Card card1;
+            Card card2;
 
-        if (card1 != null && card2 != null) {
-            insert_at_index(card2, index1);
-            insert_at_index(card1, index2);
+            if (index1 < index2) {
+                card2 = remove_from_index(index2);
+                card1 = remove_from_index(index1);
+
+                System.out.println("Card1 is " + card1);
+                System.out.println("Card2 is " + card2);
+
+                if (card1 != null && card2 != null) {
+                    insert_at_index(card1, index2);
+                    insert_at_index(card2, index1);
+                }
+            } else {
+                card1 = remove_from_index(index1);
+                card2 = remove_from_index(index2);
+
+                System.out.println("Card1 is " + card1);
+                System.out.println("Card2 is " + card2);
+
+                if (card1 != null && card2 != null) {
+                    insert_at_index(card2, index1);
+                    insert_at_index(card1, index2);
+                }
+            }
         }
     }
 
@@ -98,8 +124,13 @@ public class LinkedList {
     public void add_at_tail(Card data) {
         Node n = new Node(data);
 
-        if (size == 0) {
-            head = tail = n;
+        if (head == null) {
+            head = n;
+            tail = n;
+        } else if (head == tail) {
+            tail = n;
+            head.next = tail;
+            tail.prev = head;
         } else {
             tail.next = n;
             n.prev = tail;
@@ -111,21 +142,18 @@ public class LinkedList {
 
     // remove a card from the beginning of the list
     public Card remove_from_head() {
-        if (size == 0) {
+        if (head == null) {
             return null;
         } else {
-            if (head.next == null) {
-                Node n = head;
-                head = null;
-                return n.data;
-            } else {
+            Card c = head.data;
+            if (head != tail) {
                 head = head.next;
                 head.prev = null;
+            } else {
+                head = tail = null;
             }
-
             size--;
-
-            return head.data;
+            return c;
         }
     }
 
@@ -169,7 +197,7 @@ public class LinkedList {
     public void print() {
         Node curr = head;
         int i = 1;
-        while(curr != null) {
+        while (curr != null) {
             curr.data.print_card();
             if(curr.next != null)
                 System.out.print(" -->  ");
